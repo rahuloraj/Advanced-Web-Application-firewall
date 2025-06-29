@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAFinity - Request Checker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .checker-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checker-container {
+            max-width: 800px;
+            width: 90%;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            border: 1px solid rgba(0, 255, 234, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .checker-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .checker-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, #00FFD1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .checker-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 234, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        #user-input:focus {
+            outline: none;
+            border-color: rgba(0, 255, 234, 0.4);
+            box-shadow: 0 0 20px rgba(0, 255, 234, 0.1);
+        }
+
+        #submit-btn {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+
+        #loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #00FFD1;
+            font-weight: 500;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0, 255, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #00FFD1;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .glow-green {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .glow-red {
+            color: #ff4444;
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+        }
+
+        .glow-orange {
+            color: #ffa500;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
+        }
+
+        /* Background Animation */
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 234, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 234, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            opacity: 0.2;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes gridMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(50px); }
+        }
+
+        /* Updated Security Tips Styles */
+        .security-tips {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 255, 234, 0.1);
+            position: relative;
+        }
+        
+        .security-tips::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(0, 255, 234, 0.3),
+                transparent
+            );
+        }
+        
+        .tip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tip-header h3 {
+            background: linear-gradient(90deg, #00FFD1, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tip-nav {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .tip-nav-btn {
+            background: transparent;
+            border: 1px solid rgba(0, 255, 234, 0.3);
+            color: #00FFD1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        
+        .tip-nav-btn:hover {
+            background: rgba(0, 255, 234, 0.1);
+            border-color: #00FFD1;
+            transform: scale(1.1);
+        }
+        
+        .tip-container {
+            position: relative;
+            height: 120px;
+            overflow: hidden;
+        }
+        
+        .tip-slide {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 255, 234, 0.03);
+            border: 1px solid rgba(0, 255, 234, 0.1);
+            border-radius: 12px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tip-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            box-shadow: 0 0 30px rgba(0, 255, 234, 0.05);
+        }
+        
+        .tip-icon {
+            font-size: 2.5rem;
+            min-width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 234, 0.05);
+            border-radius: 12px;
+            animation: pulse 2s infinite;
+        }
+        
+        .tip-content h4 {
+            color: #00FFD1;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .tip-content p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                background: rgba(0, 255, 234, 0.05);
+            }
+            50% {
+                transform: scale(1.05);
+                background: rgba(0, 255, 234, 0.1);
+            }
+            100% {
+                transform: scale(1);
+                background: rgba(0, 255, 234, 0.05);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="/" class="logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text">WAFinity</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Checker Section -->
+    <section class="checker-section">
+        <div class="cyber-grid"></div>
+        
+        <div class="checker-container">
+            <div class="checker-header">
+                <h2>Security Request Checker</h2>
+                <p>Enter your request below to analyze potential security threats using our advanced AI detection system.</p>
+            </div>
+
+            <div class="input-group">
+                <input type="text" 
+                       id="user-input" 
+                       placeholder="Enter your request to check for potential threats..."
+                       autocomplete="off">
+                <button class="neon-btn" id="submit-btn">Analyze Request</button>
+            </div>
+            
+            <div id="loading">
+                <div class="loading-spinner"></div>
+                Analyzing request pattern...
+            </div>
+            
+            <div id="result"></div>
+
+<!-- Replace the security-tips div with this -->
+<div class="security-tips">
+    <div class="tip-header">
+        <h3>🛡️ Security Intelligence Hub</h3>
+        <div class="tip-nav">
+            <button class="tip-nav-btn prev">←</button>
+            <button class="tip-nav-btn next">→</button>
+        </div>
+    </div>
+    <div class="tip-container">
+        <!-- Threat Stats -->
+        <div class="tip-slide active">
+            <div class="tip-icon">🌐</div>
+            <div class="tip-content">
+                <h4>Real-time Threats</h4>
+                <p>Every 39 seconds, a cyber attack occurs. That's over 2,200 attacks per day.<br>Stay vigilant.</p>
+            </div>
+        </div>
+
+        <!-- AI Defense -->
+        <div class="tip-slide">
+            <div class="tip-icon">🤖</div>
+            <div class="tip-content">
+                <h4>AI vs Hackers</h4>
+                <p>AI systems can detect and respond to threats 60x faster than traditional methods.<br>The future is now.</p>
+            </div>
+        </div>
+
+        <!-- Smart Tip -->
+        <div class="tip-slide">
+            <div class="tip-icon">💡</div>
+            <div class="tip-content">
+                <h4>Pro Tip: Input Validation</h4>
+                <p>Always sanitize user inputs. 85% of successful attacks exploit unsanitized inputs.<br>Don't be the next victim.</p>
+            </div>
+        </div>
+
+        <!-- Crypto Attacks -->
+        <div class="tip-slide">
+            <div class="tip-icon">🎯</div>
+            <div class="tip-content">
+                <h4>DeFi Under Attack</h4>
+                <p>Over $3.8B in crypto assets were stolen in 2022.<br>Smart contract security is more crucial than ever.</p>
+            </div>
+        </div>
+
+        <!-- Quick Defense -->
+        <div class="tip-slide">
+            <div class="tip-icon">🚀</div>
+            <div class="tip-content">
+                <h4>Speed Matters</h4>
+                <p>The first 10 seconds of an attack are critical.<br>Our AI responds in under 100ms to stop threats instantly.</p>
+            </div>
+        </div>
+
+        <!-- Zero Day -->
+        <div class="tip-slide">
+            <div class="tip-icon">🕷️</div>
+            <div class="tip-content">
+                <h4>Zero-Day Threats</h4>
+                <p>Unknown vulnerabilities can stay hidden for 287 days on average.<br>AI pattern detection is your best defense.</p>
+            </div>
+        </div>
+
+        <!-- Smart Contract -->
+        <div class="tip-slide">
+            <div class="tip-icon">📜</div>
+            <div class="tip-content">
+                <h4>Contract Security</h4>
+                <p>96% of smart contracts contain at least one vulnerability.<br>Always verify before deploying.</p>
+            </div>
+        </div>
+
+        <!-- Ransomware -->
+        <div class="tip-slide">
+            <div class="tip-icon">🔒</div>
+            <div class="tip-content">
+                <h4>Ransomware Alert</h4>
+                <p>A company falls victim to ransomware every 11 seconds.<br>Prevention is better than cure.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="{{ url_for('static', filename='home.js') }}" defer></script>
+</body>
+</html>

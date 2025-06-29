@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAFinity – AI-Powered Web Security</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <span class="logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text">WAFinity</span>
+            </span>
+            <div class="quote-floating">Infinite Protection, Intelligent Detection</div>
+        </div>
+        <div class="nav-right">
+            <a href="https://github.com/Piyush-2975/Advanced-WAF-WAFinity" target="_blank" rel="noopener noreferrer" class="nav-link" title="GitHub">
+                <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+            <a href="https://www.linkedin.com/in/piyushmejari" target="_blank" rel="noopener noreferrer" class="nav-link" title="LinkedIn">
+                <svg height="24" width="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Stop Unknown Attacks
+                    Before They Strike
+                    
+                </h1>
+                <p class="hero-text">
+                    Powered by the most advanced AI detection model, 
+                    WAFinity Firewall integrates seamlessly with modern protocols and rollups to block over 99% of cyberattacks.
+                </p>
+                <div class="hero-buttons">
+                    <a href="/home" class="neon-btn">🔍 Check Security</a>
+                    <button class="neon-btn" onclick="scrollToHowItWorks()">📖 Learn More</button>
+                </div>
+            </div>
+            
+            <div class="shield-animation">
+                <div class="shield-outer"></div>
+                <div class="shield-middle"></div>
+                <div class="shield-inner">
+                    <div class="shield-core"></div>
+                </div>
+                <div class="shield-particles"></div>
+            </div>
+        </section>
+
+        <!-- Metrics Section -->
+        <section class="metrics">
+            <div class="metric-card">
+                <span class="metric-value">> 90%</span>
+                <span class="metric-label">Recall</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-value">< 0.001%</span>
+                <span class="metric-label">False Positive Rate</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-value">< 100ms</span>
+                <span class="metric-label">Latency</span>
+            </div>
+        </section>
+
+        <!-- How WAFinity Works Section -->
+        <section class="how-it-works">
+            <div class="section-container">
+                <h2 class="section-title">How WAFinity Works</h2>
+                <div class="security-features">
+                    <div class="feature-box">
+                        <div class="feature-icon"></div>
+                        <h3>Layer 1: Signature Detection</h3>
+                        <p>Incoming requests are first validated against our comprehensive database of known attack signatures for immediate threat detection</p>
+                    </div>
+                    <div class="feature-box highlight">
+                        <div class="feature-icon"></div>
+                        <h3>Layer 2: AI Analysis</h3>
+                        <p>Requests that pass signature checks undergo advanced feature extraction and ML model analysis to detect unknown attack patterns</p>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon"></div>
+                        <h3>Validated Requests</h3>
+                        <p>Only requests that successfully clear both security layers are considered valid and allowed to proceed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials">
+            <h2>What Our Users Say</h2>
+            <div class="testimonial-cards">
+                <div class="card">
+                    <p>"WAFinity detected threats our old firewall missed. Highly recommend"</p>
+                    <span>- Pradyum S, Security Analyst</span>
+                </div>
+                <div class="card">
+                    <p>"The AI-powered detection is a game-changer. No breaches since we switched"</p>
+                    <span>- Riyaz M, Data Scientist</span>
+                </div>
+                <div class="card">
+                    <p>"Simple, effective, and powerful. WAFinity is our first line of defense."</p>
+                    <span>- Amogh G, ML Security Engineer</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 WAFinity | AI-Powered Web Security | <a href="https://bento.me/piyush20" target="_blank" rel="noopener noreferrer" class="neon-link">Piyush™️</a></p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
